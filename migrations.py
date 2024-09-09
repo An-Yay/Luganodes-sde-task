@@ -1,4 +1,5 @@
 from db import engine, metadata
-def run_migrations():
-    """Run database migrations."""
+
+
+def run_migrations():   
     metadata.create_all(engine)

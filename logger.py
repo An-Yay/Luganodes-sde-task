@@ -1,13 +1,20 @@
 import logging
 
-# Setup logger
-logger = logging.getLogger("eth_tracker")
-logger.setLevel(logging.INFO)
 
-# Configure logging format
-handler = logging.StreamHandler()
-formatter = logging.Formatter(
-    '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
+def setup_logger(name):
+    """Set up a logger with standard configuration."""
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.INFO)
 
-logger.addHandler(handler)
+    
+    handler = logging.StreamHandler()
+
+    # format
+    formatter = logging.Formatter(
+        '%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    handler.setFormatter(formatter)
+
+    logger.addHandler(handler)
+    return logger
+
+logger = setup_logger("eth_tracker")

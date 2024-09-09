@@ -14,7 +14,18 @@ w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
 # Deposit event 
 deposit_event_abi = [
-    "event DepositEvent(bytes pubkey, bytes withdrawal_credentials, bytes amount, bytes signature, bytes index)"
+    {
+        "anonymous": False,
+        "inputs": [
+            {"indexed": False, "name": "pubkey", "type": "bytes"},
+            {"indexed": False, "name": "withdrawal_credentials", "type": "bytes"},
+            {"indexed": False, "name": "amount", "type": "bytes"},
+            {"indexed": False, "name": "signature", "type": "bytes"},
+            {"indexed": False, "name": "index", "type": "bytes"}
+        ],
+        "name": "DepositEvent",
+        "type": "event"
+    }
 ]
 
 # Beacon Deposit Contract 

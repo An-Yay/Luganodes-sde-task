@@ -1,6 +1,4 @@
-
 FROM python:3.9-slim
-
 
 ENV PYTHONUNBUFFERED=1
 
@@ -17,10 +15,14 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy project files
-COPY . .
+COPY ./app ./app
+
+# Copy any other necessary files from the root directory
+COPY schema.sql .
+COPY prometheus.yml .
 
 # Expose application port (if necessary)
 EXPOSE 5000
 
 # Run the application
-CMD ["python", "app.py"]
+CMD ["python", "app/app.py"]

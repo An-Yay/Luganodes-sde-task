@@ -1,9 +1,12 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, DateTime
 from sqlalchemy.orm import sessionmaker
 from config import config
+from dotenv import load_dotenv
+import os
 
 
 load_dotenv()
+DATABASE_URL = os.getenv('DATABASE_URL')
 
 
 engine = create_engine(config.DATABASE_URL)

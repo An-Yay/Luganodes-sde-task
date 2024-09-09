@@ -7,14 +7,14 @@ from config import config
 from utils import retry
 import logging
 
-# Enable detailed logging for Web3
+
 logging.getLogger('web3').setLevel(logging.DEBUG)
 
-# Initialize Web3 with Alchemy RPC using environment variable
+# Init
 w3 = Web3(Web3.HTTPProvider(
-    f"https://eth-mainnet.g.alchemy.com/v2/iE6X9Ymmyo7Ym5aJwNmOVzqHnGrGpmka"))
+    f"https://eth-mainnet.g.alchemy.com/v2/{config.ALCHEMY_API_KEY}"))
 
-# Deposit event ABI
+
 deposit_event_abi = [
     {
         "anonymous": False,
@@ -41,7 +41,7 @@ contract = w3.eth.contract(
 def fetch_block_timestamp(block_number):
     """Fetch block timestamp."""
     try:
-        block = w3.eth.get_block(block_number)  # Updated for Web3 v6.x.x
+        block = w3.eth.get_block(block_number)  
         return datetime.fromtimestamp(block['timestamp'])
     except Exception as e:
         logger.error(f"Error fetching block timestamp: {e}")
@@ -61,18 +61,18 @@ def handle_deposit_event(event):
 
         # Calculate transaction fee
         transaction = w3.eth.get_transaction(
-            tx_hash)  # Updated for Web3 v6.x.x
+            tx_hash) 
         receipt = w3.eth.get_transaction_receipt(
-            tx_hash)  # Updated for Web3 v6.x.x
+            tx_hash)  
         fee = receipt.gasUsed * transaction.gasPrice
 
         pubkey = event['args']['pubkey'].hex()
 
-        # Log deposit details
+        # Log deposit 
         logger.info(
             f"Transaction Hash: {tx_hash}, Block: {block_number}, Timestamp: {timestamp}, Fee: {fee}, Pubkey: {pubkey}")
 
-        # Store deposit in the database
+        # Store deposit 
         with engine.begin() as conn:
             conn.execute(insert(deposits).values(
                 hash=tx_hash,
@@ -89,28 +89,28 @@ def start_tracking():
     logger.info("Starting Ethereum deposit tracker...")
 
     # Latest block to start tracking from
-    latest_block = w3.eth.get_block_number()  # Updated for Web3 v6.x.x
+    latest_block = w3.eth.get_block_number()  
     logger.info(f"Starting from block: {latest_block}")
 
     while True:
         try:
-            # Use w3.eth.get_logs to manually fetch logs (simplified filter params)
+            
             event_filter_params = {
-                'fromBlock': latest_block,  # Start from the most recent block
+                'fromBlock': latest_block, 
                 'address': config.BEACON_DEPOSIT_CONTRACT_ADDRESS,
             }
 
-            # Log the event filter parameters for debugging
+            # Log event filter 
             logger.debug(f"Event filter params: {event_filter_params}")
 
-            # Updated for Web3 v6.x.x
+          
             logs = w3.eth.get_logs(event_filter_params)
             for log in logs:
                 event = contract.events.DepositEvent().process_log(log)
                 handle_deposit_event(event)
 
             # Update the latest block
-            latest_block = w3.eth.get_block_number()  # Updated for Web3 v6.x.x
+            latest_block = w3.eth.get_block_number()  
 
         except Exception as e:
             logger.error(f"Error during event processing: {e}")

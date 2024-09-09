@@ -1,0 +1,38 @@
+version: "3.9"
+services:
+  postgres:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: eth_deposits
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  tracker:
+    build: .
+    environment:
+      - ALCHEMY_API_KEY=${ALCHEMY_API_KEY}
+      - DATABASE_URL=postgresql://user:password@postgres:5432/eth_deposits
+      - BEACON_DEPOSIT_CONTRACT_ADDRESS=${BEACON_DEPOSIT_CONTRACT_ADDRESS}
+      - TELEGRAM_NOTIFICATIONS_BOT_TOKEN=${TELEGRAM_NOTIFICATIONS_BOT_TOKEN}
+      - TELEGRAM_NOTIFICATIONS_CHAT_ID=${TELEGRAM_NOTIFICATIONS_CHAT_ID}
+    depends_on:
+      - postgres
+
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+
+volumes:
+  postgres_data:
+  grafana_data:

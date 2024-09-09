@@ -23,3 +23,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# TODO: Telegram Notification Fix
+# TODO: Readme
+# TODO: Code Documentation
+# TODO: Video Demo + Screenshots 

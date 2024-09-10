@@ -5,8 +5,6 @@ from prometheus_client import start_http_server, Counter
 
 deposit_counter = Counter('deposit_total', 'Number of ETH deposits tracked')
 
-
-
 def main():
    
     try:
@@ -29,3 +27,5 @@ if __name__ == "__main__":
 # TODO: Readme
 # TODO: Code Documentation
 # TODO: Video Demo + Screenshots 
+#TODO: Improve Code Quality
+#TODO: Comment & Docstrings

@@ -1,7 +1,7 @@
 import time
 
 
-def retry(max_attempts=3, delay=5):
+def retry(max_attempts=10, delay=2):
  
     def decorator(func):
         def wrapper(*args, **kwargs):
